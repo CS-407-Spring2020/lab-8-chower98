@@ -1,5 +1,6 @@
 package com.uw.lab8;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -54,7 +56,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void downloadClick(View view) {
-        //1. Create a Reference
-        
+        //1. Create a Reference to object uploaded
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference buckyRef = storageReference.child("images/bucky.png");
+
+        //2. Get ImageView object
+        final ImageView imageView = findViewById(R.id.imageView);
+        final long ONE_MEGABYTE = 1024 * 1024 * 3;
+
+        //3. Download Image into byte stream, set image in imageview
+        buckyRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                //4. Data for 'images/bucky.png' returned. Turn into bitmap
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                //5. Set the image in imageView
+                imageView.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                e.printStackTrace();
+                Log.i("Error", "Image Download Failed");
+            }
+        });
+
     }
 }
