@@ -12,6 +12,8 @@ import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -19,6 +21,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,31 +32,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void uploadClick(View view) {
-        try {
+    //    try {
             //1. Create a Reference
-            StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-            StorageReference buckyRef = storageRef.child("images/bucky.png");
+            //StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+            //StorageReference buckyRef = storageRef.child("images/bucky.png");
+//            storageRef.child("users").setValue("Charlie");
+            DatabaseReference d = FirebaseDatabase.getInstance().getReference();
+            d.child("userInfo").child("chower2").child("password").setValue("abcde");
 
             //2. Convert Image to byte stream
-            Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.bucky);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] buckyByteStream = baos.toByteArray();
+            //Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.bucky);
+            //ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            //byte[] buckyByteStream = baos.toByteArray();
 
             //3. Start upload class
-            UploadTask uploadTask = buckyRef.putBytes(buckyByteStream);
-            uploadTask.addOnFailureListener((exception) -> {
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i("ImageUpload", "Image successfully uploaded to Firebase");
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.i("Error", "Image Upload Failed");
-        }
-    }
+            //UploadTask uploadTask = buckyRef.putBytes(buckyByteStream);
+            //uploadTask.addOnFailureListener((exception) -> {
+            //}).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                @Override
+//                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                    Log.i("ImageUpload", "Image successfully uploaded to Firebase");
+//                }
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Log.i("Error", "Image Upload Failed");
+//        }
+}
 
     public void downloadClick(View view) {
         //1. Create a Reference to object uploaded
